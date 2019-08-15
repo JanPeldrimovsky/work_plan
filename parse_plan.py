@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import glob
 import os
@@ -9,13 +10,22 @@ import gui
 from resources.sounds.sound_resources import no_plan_alarm, alarm
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Work plan')
+    parser.add_argument('--plan_folder', required=False, type=str,
+                        help="Folder with plan files (default value - current working directory)", default=os.getcwd())
+    return parser.parse_args()
+
+
 def main():
+    args = parse_arguments()
+
     shown_times = []
 
     logger.debug("Work plan started")
 
     while True:
-        plan_file, error_message = find_plan_file(os.getcwd())
+        plan_file, error_message = find_plan_file(args.plan_folder)
 
         if plan_file is None:
             logger.warning(f"No plan file found")
